@@ -725,7 +725,15 @@ async def homepage(request):
         content_type="text/html",
     )
 
+  
+@routes.get("/torapp/Downloads")
+async def homepage(request):
+    return web.Response(
+        text='<h1>403: Forbidden</h2><br><h3>TorToolKitX</h3>',
+        content_type="text/html",
+    )
 
+  
 async def e404_middleware(app, handler):
     async def middleware_handler(request):
         try:
@@ -752,7 +760,7 @@ async def start_server():
 
     app = web.Application(middlewares=[e404_middleware])
     app.add_routes(routes)
-    app.router.add_static("/torapp/Downloads", '/', show_index=True)
+    app.router.add_static("/torapp/Downloads", '/torapp', show_index=True)
 
     return app
 
@@ -762,7 +770,7 @@ async def start_server_async(port=8080):
 
     app = web.Application(middlewares=[e404_middleware])
     app.add_routes(routes)
-    app.router.add_static("/torapp/Downloads", '/', show_index=True)
+    app.router.add_static("/torapp/Downloads", '/torapp', show_index=True)
     runner = web.AppRunner(app)
     await runner.setup()
     # todo provide the config for the host and port for vps only
