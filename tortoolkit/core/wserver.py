@@ -726,7 +726,8 @@ async def homepage(request):
     )
 
   
-@routes.get("/torapp/Downloads")
+@routes.get("/torapp")
+#@routes.get("/torapp/Downloads")
 async def homepage(request):
     return web.Response(
         text='<h1>403: Forbidden</h2><br><h3>TorToolKitX</h3>',
@@ -760,7 +761,7 @@ async def start_server():
 
     app = web.Application(middlewares=[e404_middleware])
     app.add_routes(routes)
-    app.router.add_static("/torapp/Downloads", '/torapp', show_index=True)
+    app.router.add_static("/torapp", '/torapp', show_index=True)
 
     return app
 
