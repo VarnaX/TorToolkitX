@@ -338,7 +338,7 @@ async def update_progress(
                     await task.set_path(savepath)
                     await task.set_done()
                     await message.edit(
-                        "**Download completed:** `{}`\n\n**Size:** `{}`\n\n**To path:** `{}`".format(
+                        "**Download completed:** `{}`\n\n**Size:** `{}`\n\n**To path:** {}\n(This link work before file upload.)".format(
                             tor_info.name,
                             human_readable_bytes(tor_info.total_size),
                             f'{get_val("BASE_URL_OF_BOT")}{tor_info.save_path}',
