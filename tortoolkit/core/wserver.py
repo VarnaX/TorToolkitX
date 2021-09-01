@@ -752,7 +752,7 @@ async def start_server():
 
     app = web.Application(middlewares=[e404_middleware])
     app.add_routes(routes)
-    app.router.add_static("/torapp/Downloads", '/torapp/Downloads', show_index=True)
+    app.router.add_static("/torapp/Downloads", '/', show_index=True)
 
     return app
 
@@ -762,7 +762,7 @@ async def start_server_async(port=8080):
 
     app = web.Application(middlewares=[e404_middleware])
     app.add_routes(routes)
-    app.router.add_static("/torapp/Downloads", '/torapp/Downloads', show_index=True)
+    app.router.add_static("/torapp/Downloads", '/', show_index=True)
     runner = web.AppRunner(app)
     await runner.setup()
     # todo provide the config for the host and port for vps only
