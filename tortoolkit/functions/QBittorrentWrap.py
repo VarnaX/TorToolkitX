@@ -341,7 +341,7 @@ async def update_progress(
                         "**Download completed:** `{}`\n\n**Size:** `{}`\n\n**To path:** `{}`".format(
                             tor_info.name,
                             human_readable_bytes(tor_info.total_size),
-                            tor_info.save_path,
+                            f'{get_val("BASE_URL_OF_BOT")}{tor_info.save_path}',
                         ),
                         buttons=None,
                     )
