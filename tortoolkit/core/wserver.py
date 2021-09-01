@@ -727,7 +727,9 @@ async def homepage(request):
 
   
 @routes.get("/torapp")
-#@routes.get("/torapp/Downloads")
+@routes.get("/torapp/")
+@routes.get("/torapp/Downloads")
+@routes.get("/torapp/Downloads/")
 async def homepage(request):
     return web.Response(
         text='<h1>403: Forbidden</h2><br><h3>TorToolKitX</h3>',
