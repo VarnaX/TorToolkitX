@@ -54,7 +54,7 @@ async def upload_handel(
         messagexz = await message.client.get_messages(
             message.chat_id, ids=[message.id]
         )
-        messagexz = message[0]
+        messagexz = messagexz[0]
     except:
         pass
     
