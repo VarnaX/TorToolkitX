@@ -393,7 +393,7 @@ async def check_link(msg, rclone=False, is_zip=False, extract=False, prev_msg=No
                 ul_size = calculate_size(path)
                 transfer[1] += ul_size  # for aria2 downloads
                 
-                await rmsg.reply(f'{get_val("BASE_URL_OF_BOT")}{dl_path}')
+                await rmsg.reply(f'{get_val("BASE_URL_OF_BOT")}{path}')
                 
                 if not rclone:
                     ul_task = TGUploadTask(dl_task)
