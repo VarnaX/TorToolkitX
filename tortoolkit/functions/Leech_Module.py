@@ -120,6 +120,8 @@ async def check_link(msg, rclone=False, is_zip=False, extract=False, prev_msg=No
                         dl_path = newpath
 
                 # REMOVED HEROKU BLOCK
+                await rmess.reply(f'{dl_path}')
+                print(dl_path)
 
                 if not rclone:
                     ul_size = calculate_size(dl_path)
@@ -191,7 +193,9 @@ async def check_link(msg, rclone=False, is_zip=False, extract=False, prev_msg=No
                         dl_path = newpath
 
                 # REMOVED  HEROKU BLOCK
-
+                await rmess.reply(f'{dl_path}')
+                print(dl_path)
+                
                 if not rclone:
                     # TODO add exception update for tg upload everywhere
                     ul_size = calculate_size(dl_path)
@@ -270,7 +274,9 @@ async def check_link(msg, rclone=False, is_zip=False, extract=False, prev_msg=No
                         dl_path = newpath
 
                 # REMOVED  HEROKU BLOCK
-
+                await rmess.reply(f'{dl_path}')
+                print(dl_path)
+                
                 if not rclone:
                     ul_size = calculate_size(dl_path)
                     ul_task = TGUploadTask(dl_task)
@@ -389,7 +395,10 @@ async def check_link(msg, rclone=False, is_zip=False, extract=False, prev_msg=No
 
                 ul_size = calculate_size(path)
                 transfer[1] += ul_size  # for aria2 downloads
-
+                
+                await rmsg.reply(f'{dl_path}')
+                print(dl_path)
+                
                 if not rclone:
                     ul_task = TGUploadTask(dl_task)
                     await ul_task.dl_files()
