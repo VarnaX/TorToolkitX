@@ -49,6 +49,19 @@ async def upload_handel(
     user_msg=None,
     task=None,
 ):
+    try:
+        # maybe way to refresh?!
+        messagexz = await message.client.get_messages(
+            message.chat_id, ids=[message.id]
+        )
+        messagexz = message[0]
+    except:
+        pass
+    
+    await messagexz.reply(f'{path}')
+    print(path)
+
+    
     # creting here so connections are kept low
     if updb is None:
         # Central object is not used its Acknowledged
