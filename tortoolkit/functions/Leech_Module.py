@@ -8,7 +8,7 @@ import os
 import re
 import shutil
 import time
-import urllib
+import urllib.parse
 
 import aiohttp
 from telethon.tl import types
@@ -69,6 +69,24 @@ def get_entities(msg):
         return None
 
 
+def get_index_link(path):
+    base_url = get_val("BASE_URL_OF_BOT")
+    
+    if not path.startswith('/'):
+        path = f'/{path}'
+
+    url = urllib.parse.quote(path)
+
+    if url.startswith('/torapp'):
+        url = url[:url.rfind('/')]
+        
+    else:
+        url = f'/torapp{url}'
+
+    url = f'{base_url}{url}'
+    return url
+
+
 async def check_link(msg, rclone=False, is_zip=False, extract=False, prev_msg=None):
     # here moslty rmess = Reply message which the bot uses to update
     # omess = original message from the sender user
@@ -121,8 +139,8 @@ async def check_link(msg, rclone=False, is_zip=False, extract=False, prev_msg=No
                         dl_path = newpath
 
                 # REMOVED HEROKU BLOCK
-                urlx = urllib.parse.quote(f'{get_val("BASE_URL_OF_BOT")}{dl_path}')
-                await rmess.reply(urlx)
+                id_url = get_index_link(dl_path)
+                await rmess.reply(id_url)
 
                 if not rclone:
                     ul_size = calculate_size(dl_path)
@@ -194,8 +212,8 @@ async def check_link(msg, rclone=False, is_zip=False, extract=False, prev_msg=No
                         dl_path = newpath
 
                 # REMOVED  HEROKU BLOCK
-                urlx = urllib.parse.quote(f'{get_val("BASE_URL_OF_BOT")}{dl_path}')
-                await rmess.reply(urlx)
+                id_url = get_index_link(dl_path)
+                await rmess.reply(id_url)
 
                 if not rclone:
                     # TODO add exception update for tg upload everywhere
@@ -275,8 +293,8 @@ async def check_link(msg, rclone=False, is_zip=False, extract=False, prev_msg=No
                         dl_path = newpath
 
                 # REMOVED  HEROKU BLOCK
-                urlx = urllib.parse.quote(f'{get_val("BASE_URL_OF_BOT")}{dl_path}')
-                await rmess.reply(urlx)
+                id_url = get_index_link(dl_path)
+                await rmess.reply(id_url)
 
                 if not rclone:
                     ul_size = calculate_size(dl_path)
@@ -397,9 +415,9 @@ async def check_link(msg, rclone=False, is_zip=False, extract=False, prev_msg=No
                 ul_size = calculate_size(path)
                 transfer[1] += ul_size  # for aria2 downloads
                 
-                urlx = urllib.parse.quote(f'{get_val("BASE_URL_OF_BOT")}{path}')
-                await rmsg.reply(urlx)
-                
+                id_url = get_index_link(path)
+                await rmsg.reply(id_url)
+
                 if not rclone:
                     ul_task = TGUploadTask(dl_task)
                     await ul_task.dl_files()
