@@ -725,7 +725,7 @@ async def homepage(request):
         content_type="text/html",
     )
 
-  
+'''  
 @routes.get("/torapp")
 @routes.get("/torapp/")
 @routes.get("/torapp/Downloads")
@@ -735,7 +735,7 @@ async def homepage(request):
         text='<h1>403: Forbidden</h2><br><h3>TorToolKitX</h3>',
         content_type="text/html",
     )
-
+'''
   
 async def e404_middleware(app, handler):
     async def middleware_handler(request):
