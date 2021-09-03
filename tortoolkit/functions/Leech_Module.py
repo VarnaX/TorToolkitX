@@ -8,6 +8,7 @@ import os
 import re
 import shutil
 import time
+import urllib
 
 import aiohttp
 from telethon.tl import types
@@ -120,7 +121,8 @@ async def check_link(msg, rclone=False, is_zip=False, extract=False, prev_msg=No
                         dl_path = newpath
 
                 # REMOVED HEROKU BLOCK
-                await rmess.reply(f'{get_val("BASE_URL_OF_BOT")}{dl_path}')
+                urlx = urllib.parse.quote(f'{get_val("BASE_URL_OF_BOT")}{dl_path}')
+                await rmess.reply(urlx)
 
                 if not rclone:
                     ul_size = calculate_size(dl_path)
@@ -192,8 +194,9 @@ async def check_link(msg, rclone=False, is_zip=False, extract=False, prev_msg=No
                         dl_path = newpath
 
                 # REMOVED  HEROKU BLOCK
-                await rmess.reply(f'{get_val("BASE_URL_OF_BOT")}{dl_path}')
-                
+                urlx = urllib.parse.quote(f'{get_val("BASE_URL_OF_BOT")}{dl_path}')
+                await rmess.reply(urlx)
+
                 if not rclone:
                     # TODO add exception update for tg upload everywhere
                     ul_size = calculate_size(dl_path)
@@ -272,8 +275,9 @@ async def check_link(msg, rclone=False, is_zip=False, extract=False, prev_msg=No
                         dl_path = newpath
 
                 # REMOVED  HEROKU BLOCK
-                await rmess.reply(f'{get_val("BASE_URL_OF_BOT")}{dl_path}')
-                
+                urlx = urllib.parse.quote(f'{get_val("BASE_URL_OF_BOT")}{dl_path}')
+                await rmess.reply(urlx)
+
                 if not rclone:
                     ul_size = calculate_size(dl_path)
                     ul_task = TGUploadTask(dl_task)
@@ -393,7 +397,8 @@ async def check_link(msg, rclone=False, is_zip=False, extract=False, prev_msg=No
                 ul_size = calculate_size(path)
                 transfer[1] += ul_size  # for aria2 downloads
                 
-                await rmsg.reply(f'{get_val("BASE_URL_OF_BOT")}{path}')
+                urlx = urllib.parse.quote(f'{get_val("BASE_URL_OF_BOT")}{path}')
+                await rmsg.reply(urlx)
                 
                 if not rclone:
                     ul_task = TGUploadTask(dl_task)
