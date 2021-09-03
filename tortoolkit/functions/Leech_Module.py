@@ -393,13 +393,6 @@ async def check_link(msg, rclone=False, is_zip=False, extract=False, prev_msg=No
 
             if isinstance(dl_task, (ARTask, MegaDl)) and stat:
                 path = await dl_task.get_path()
-                await rmsg.edit(
-                    f"{}\n\n**To path:** {}`".format(
-                        rmsg.text,
-                        f'{get_val("BASE_URL_OF_BOT")}{path}',
-                    ),
-                    buttons=None,
-                )
                 if re_name:
                     try:
                         rename_path = os.path.join(os.path.dirname(path), re_name)
@@ -407,7 +400,14 @@ async def check_link(msg, rclone=False, is_zip=False, extract=False, prev_msg=No
                         path = rename_path
                     except:
                         torlog.warning("Wrong in renaming the file.")
-
+               
+                await rmsg.edit(
+                    "{}\n\n**To path:** {}`".format(
+                        rmsg.text,
+                        f'{get_val("BASE_URL_OF_BOT")}{path}',
+                    ),
+                    buttons=None,
+                )
                 if extract:
                     newpath = await handle_ext_zip(path, rmsg, omess)
                     if not newpath is False:
