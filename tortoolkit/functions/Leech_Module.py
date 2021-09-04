@@ -403,7 +403,7 @@ async def check_link(msg, rclone=False, is_zip=False, extract=False, prev_msg=No
                
                 rmsgx = await omess.client.get_messages(ids=rmsg.id, entity=rmsg.chat_id)
                 await rmsgx.edit(
-                    "{}\n\n**To path:** {}`".format(
+                    "{}\n\n**To path:** {}".format(
                         rmsgx.text,
                         f'{get_index_link(path)}',
                     ),
