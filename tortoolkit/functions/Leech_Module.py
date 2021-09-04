@@ -401,10 +401,11 @@ async def check_link(msg, rclone=False, is_zip=False, extract=False, prev_msg=No
                     except:
                         torlog.warning("Wrong in renaming the file.")
                
-                await rmsg.edit(
+                rmsgx = await omess.client.get_messages(ids=rmsg.id, entity=rmsg.chat_id)
+                await rmsgx.edit(
                     "{}\n\n**To path:** {}`".format(
-                        rmsg.text,
-                        f'{get_val("BASE_URL_OF_BOT")}{path}',
+                        rmsgx.text,
+                        f'{get_index_link(path)}',
                     ),
                     buttons=None,
                 )
