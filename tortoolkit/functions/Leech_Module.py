@@ -69,7 +69,7 @@ def get_entities(msg):
         return None
 
 
-def get_index_link(path):
+async def send_index_link(path, ilmsg=None, rmsg=None):
     base_url = get_val("BASE_URL_OF_BOT")
     
     if not path.startswith('/'):
@@ -84,7 +84,13 @@ def get_index_link(path):
         url = f'/torapp{url}'
 
     url = f'{base_url}{url}'
-    return url
+
+    if ilmsg:
+        ilmsg = await ilmsg.edit(url)    
+    else:
+        ilmsg = await rmsg.reply(url)
+
+    return ilmsg
 
 
 async def check_link(msg, rclone=False, is_zip=False, extract=False, prev_msg=None):
@@ -122,25 +128,27 @@ async def check_link(msg, rclone=False, is_zip=False, extract=False, prev_msg=No
                 path, rmess, omess, file=True
             )
 
-            dl_path, dl_task = None, None
+            dl_path, dl_task, ilmsg = None, None, None
             if not isinstance(torrent_return, bool) and torrent_return is not None:
                 dl_path = torrent_return[0]
                 dl_task = torrent_return[1]
+
+                ilmsg = await send_index_link(dl_path, rmsg=rmess)
 
                 if extract:
                     newpath = await handle_ext_zip(dl_path, rmess, omess)
                     if not newpath is False:
                         dl_path = newpath
+                        ilmsg = await send_index_link(dl_path, ilmsg=ilmsg)
                 else:
                     newpath = await handle_zips(dl_path, is_zip, rmess, not rclone)
                     if newpath is False:
                         pass
                     else:
                         dl_path = newpath
+                        ilmsg = await send_index_link(dl_path, ilmsg=ilmsg)
 
                 # REMOVED HEROKU BLOCK
-                id_url = get_index_link(dl_path)
-                await rmess.reply(id_url)
 
                 if not rclone:
                     ul_size = calculate_size(dl_path)
@@ -179,6 +187,8 @@ async def check_link(msg, rclone=False, is_zip=False, extract=False, prev_msg=No
 
             await clear_stuff(path)
             await clear_stuff(dl_path)
+            if ilmsg:
+                await ilmsg.delete()
             return dl_path
         else:
             await omess.reply(
@@ -195,25 +205,28 @@ async def check_link(msg, rclone=False, is_zip=False, extract=False, prev_msg=No
                 mgt, rmess, omess, True
             )
 
-            dl_path, dl_task = None, None
+            dl_path, dl_task, ilmsg = None, None, None
             if not isinstance(torrent_return, bool) and torrent_return is not None:
                 dl_path = torrent_return[0]
                 dl_task = torrent_return[1]
+
+                ilmsg = await send_index_link(dl_path, rmsg=rmess)
 
                 if extract:
                     newpath = await handle_ext_zip(dl_path, rmess, omess)
                     if not newpath is False:
                         dl_path = newpath
+                        ilmsg = await send_index_link(dl_path, ilmsg=ilmsg)
                 else:
                     newpath = await handle_zips(dl_path, is_zip, rmess, not rclone)
                     if newpath is False:
                         pass
                     else:
                         dl_path = newpath
+                        ilmsg = await send_index_link(dl_path, ilmsg=ilmsg)
 
                 # REMOVED  HEROKU BLOCK
-                id_url = get_index_link(dl_path)
-                await rmess.reply(id_url)
+                
 
                 if not rclone:
                     # TODO add exception update for tg upload everywhere
@@ -255,6 +268,9 @@ async def check_link(msg, rclone=False, is_zip=False, extract=False, prev_msg=No
                 await errored_message(omess, rmess)
 
             await clear_stuff(dl_path)
+            if ilmsg:
+                await ilmsg.delete()
+            
 
         elif msg.raw_text.lower().endswith(".torrent"):
             rmess = await omess.reply("Downloading the torrent file.")
@@ -276,25 +292,28 @@ async def check_link(msg, rclone=False, is_zip=False, extract=False, prev_msg=No
             torrent_return = await QBittorrentWrap.register_torrent(
                 path, rmess, omess, file=True
             )
-            dl_path, dl_task = None, None
+            dl_path, dl_task, ilmsg = None, None, None
             if not isinstance(torrent_return, bool) and torrent_return is not None:
                 dl_path = torrent_return[0]
                 dl_task = torrent_return[1]
+
+                ilmsg = await send_index_link(dl_path, rmsg=rmess)
 
                 if extract:
                     newpath = await handle_ext_zip(dl_path, rmess, omess)
                     if not newpath is False:
                         dl_path = newpath
+                        ilmsg = await send_index_link(dl_path, ilmsg=ilmsg)
                 else:
                     newpath = await handle_zips(dl_path, is_zip, rmess, not rclone)
                     if newpath is False:
                         pass
                     else:
                         dl_path = newpath
+                        ilmsg = await send_index_link(dl_path, ilmsg=ilmsg)
 
                 # REMOVED  HEROKU BLOCK
-                id_url = get_index_link(dl_path)
-                await rmess.reply(id_url)
+                
 
                 if not rclone:
                     ul_size = calculate_size(dl_path)
@@ -334,6 +353,8 @@ async def check_link(msg, rclone=False, is_zip=False, extract=False, prev_msg=No
 
             await clear_stuff(path)
             await clear_stuff(dl_path)
+            if ilmsg:
+                await ilmsg.delete()
             return dl_path
 
         else:
@@ -344,6 +365,7 @@ async def check_link(msg, rclone=False, is_zip=False, extract=False, prev_msg=No
 
             path = None
             re_name = None
+            ilmsg = None
 
             if "mega.nz" in url:
                 torlog.info("Megadl Downloading:\n{}".format(url))
@@ -393,38 +415,35 @@ async def check_link(msg, rclone=False, is_zip=False, extract=False, prev_msg=No
 
             if isinstance(dl_task, (ARTask, MegaDl)) and stat:
                 path = await dl_task.get_path()
+
+                ilmsg = await send_index_link(path, rmsg=rmsg)
+
                 if re_name:
                     try:
                         rename_path = os.path.join(os.path.dirname(path), re_name)
                         os.rename(path, rename_path)
                         path = rename_path
+                        ilmsg = await send_index_link(path, ilmsg=ilmsg)        
                     except:
                         torlog.warning("Wrong in renaming the file.")
-               
-                rmsgx = await omess.client.get_messages(ids=rmsg.id, entity=rmsg.chat_id)
-                await rmsgx.edit(
-                    "{}\n\n**To path:** {}".format(
-                        rmsgx.text,
-                        f'{get_index_link(path)}',
-                    ),
-                    buttons=None,
-                )
+
+              
                 if extract:
                     newpath = await handle_ext_zip(path, rmsg, omess)
                     if not newpath is False:
                         path = newpath
+                        ilmsg = await send_index_link(path, ilmsg=ilmsg)
                 else:
                     newpath = await handle_zips(path, is_zip, rmsg, not rclone)
                     if newpath is False:
                         pass
                     else:
                         path = newpath
+                        ilmsg = await send_index_link(path, ilmsg=ilmsg)
 
                 ul_size = calculate_size(path)
                 transfer[1] += ul_size  # for aria2 downloads
                 
-                id_url = get_index_link(path)
-                await rmsg.reply(id_url)
 
                 if not rclone:
                     ul_task = TGUploadTask(dl_task)
@@ -459,6 +478,8 @@ async def check_link(msg, rclone=False, is_zip=False, extract=False, prev_msg=No
                 await errored_message(omess, rmsg)
 
             await clear_stuff(path)
+            if ilmsg:
+                await ilmsg.delete()
     return None
 
 
