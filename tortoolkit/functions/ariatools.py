@@ -4,6 +4,7 @@
 
 import asyncio
 import logging
+import time
 import os
 from functools import partial
 
@@ -20,6 +21,7 @@ aloop = asyncio.get_event_loop()
 
 
 async def aria_start():
+    dirf = os.path.join(os.getcwd(), "Downloads", str(time.time()).replace(".", ""))
     aria2_daemon_start_cmd = []
     # start the daemon, aria2c command
 
@@ -29,7 +31,7 @@ async def aria_start():
     aria2_daemon_start_cmd.append("--rpc-listen-all=true")
     aria2_daemon_start_cmd.append(f"--rpc-listen-port=8100")
     aria2_daemon_start_cmd.append("--rpc-max-request-size=1024M")
-    aria2_daemon_start_cmd.append("--dir=Downloads")
+    aria2_daemon_start_cmd.append(f"--dir={dirf}")
 
     aria2_daemon_start_cmd.append("--conf-path=/torapp/tortoolkit/aria2/aria2.conf")
 
