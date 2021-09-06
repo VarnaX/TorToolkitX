@@ -446,6 +446,7 @@ async def handle_settings_command(e):
         await handle_settings(e)
     else:
         await e.delete()
+    await e.delete()
 
 
 async def handle_status_command(e):
