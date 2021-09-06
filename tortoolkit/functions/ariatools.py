@@ -193,6 +193,7 @@ async def aria_dl(incoming_link, c_file_name, sent_message_to_update_tg_p, user_
             file = await aloop.run_in_executor(
                 None, aria_instance.get_download, err_message
             )
+            print(file)
             to_upload_file = file.name
             await ar_task.set_path(to_upload_file)
             await ar_task.set_done()
