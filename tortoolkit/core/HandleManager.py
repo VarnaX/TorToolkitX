@@ -457,10 +457,12 @@ async def handle_status_command(e):
             await get_status(e)
     else:
         await create_status_menu(e)
+    await e.delete()
 
 
 async def handle_u_status_command(e):
     await create_status_user_menu(e)
+    await e.delete()
 
 
 async def speed_handler(e):
