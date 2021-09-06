@@ -5,7 +5,6 @@
 import asyncio
 import logging
 import os
-import time
 from functools import partial
 
 import aria2p
@@ -194,10 +193,7 @@ async def aria_dl(incoming_link, c_file_name, sent_message_to_update_tg_p, user_
             file = await aloop.run_in_executor(
                 None, aria_instance.get_download, err_message
             )
-            savepath = os.path.join(
-                os.getcwd(), "Downloads", str(time.time()).replace(".", "")
-            )
-            to_upload_file = f'{savepath}/{file.name}'
+            to_upload_file = file.name
             await ar_task.set_path(to_upload_file)
             await ar_task.set_done()
             return True, ar_task
