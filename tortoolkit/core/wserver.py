@@ -763,7 +763,8 @@ async def start_server():
 
     app = web.Application(middlewares=[e404_middleware])
     app.add_routes(routes)
-    app.router.add_static("/torapp", '/torapp', show_index=True)
+    app.router.add_static("/torapp", '/', show_index=True)
+    #app.router.add_static("/torapp", '/torapp', show_index=True)
 
     return app
 
