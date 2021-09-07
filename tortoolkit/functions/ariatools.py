@@ -4,7 +4,6 @@
 
 import asyncio
 import logging
-import time
 import os
 from functools import partial
 
@@ -18,10 +17,10 @@ from ..core.status.status import ARTask
 # pylint: disable=no-value-for-parameter
 torlog = logging.getLogger(__name__)
 aloop = asyncio.get_event_loop()
+dirf = os.path.join(os.getcwd(), "Downloads", "AriaDL")
 
 
 async def aria_start():
-    dirf = os.path.join(os.getcwd(), "Downloads", str(time.time()).replace(".", ""))
     aria2_daemon_start_cmd = []
     # start the daemon, aria2c command
 
@@ -196,7 +195,7 @@ async def aria_dl(incoming_link, c_file_name, sent_message_to_update_tg_p, user_
             file = await aloop.run_in_executor(
                 None, aria_instance.get_download, err_message
             )
-            to_upload_file = file.name
+            to_upload_file = os.path.join(dirf, file.name)
             await ar_task.set_path(to_upload_file)
             await ar_task.set_done()
             return True, ar_task
